@@ -30,6 +30,20 @@ while [[ $# -gt 0 ]]; do
 
             echo -e "${GREEN}Build completed!${NC}"
             ;;
+        -d|debug)
+            mkdir -p build/run
+            git submodule init && git submodule update
+
+            rm -rf bin/* include/* lib/*
+
+            cd build/run
+            cmake -DCMAKE_BUILD_TYPE=Debug ../..
+            make -j 12
+            make install | egrep -v 'gmock|gtest'
+            cd ../..
+
+            echo -e "${GREEN}Debug build completed!${NC}"
+            ;;
         -r|run)
             if [[ -f bin/brainfuck_cpp ]]; then
                 bin/brainfuck_cpp "$@"

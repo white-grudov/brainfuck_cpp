@@ -4,7 +4,9 @@
 class BrainfuckTest : public ::testing::Test 
 {
 private:
-    bf::Brainfuck brainfuck;
+
+    bf::BrainfuckArgs args;
+    bf::Brainfuck brainfuck{args};
 
 protected:
     virtual void run(std::string program, std::string output) 
