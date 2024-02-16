@@ -5,7 +5,7 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 [[ -z $(which git) ]] && {
-  echo "You need git installed. Please run 'xcode-select --install' first."
+  echo -e "${RED}You don't have git installed.${NC}"
   exit 1
 }
 
