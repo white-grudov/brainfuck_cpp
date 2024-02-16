@@ -1,0 +1,54 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+[[ -z $(which git) ]] && {
+  echo "You need git installed. Please run 'xcode-select --install' first."
+  exit 1
+}
+
+if [ $# -eq 0 ]; then
+    echo -e "${RED}No arguments provided.${NC}"
+    exit 1
+fi
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -b|build)
+            mkdir -p build/run
+            git submodule init && git submodule update
+
+            rm -rf bin/b* include/b* lib/*
+
+            cd build/run
+            cmake ../.. 
+            make -j 12
+            make install | egrep -v 'gmock|gtest'
+            cd ../..
+
+            echo -e "${GREEN}Build completed!${NC}"
+            ;;
+        -r|run)
+            if [[ -f bin/brainfuck_cpp ]]; then
+                bin/brainfuck_cpp "$@"
+            else
+                echo -e "${RED}Can't find installed executable ./bin/brainfuck_cpp${NC}"
+                exit 2
+            fi
+            ;;
+        -t|test)
+            if [[ -f bin/brainfuck_tests ]]; then
+                bin/brainfuck_tests "$@"
+            else
+                echo -e "${RED}Can't find installed executable ./bin/brainfuck_tests${NC}"
+                exit 2
+            fi
+            ;;
+        *)
+            echo -e "${RED}Unknown option: $1${NC}"
+            ;;
+    esac
+    shift
+done
