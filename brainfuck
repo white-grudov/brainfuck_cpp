@@ -33,6 +33,7 @@ while [[ $# -gt 0 ]]; do
         -r|run)
             if [[ -f bin/brainfuck_cpp ]]; then
                 bin/brainfuck_cpp "$@"
+                exit 0
             else
                 echo -e "${RED}Can't find installed executable ./bin/brainfuck_cpp${NC}"
                 exit 2
@@ -40,7 +41,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -t|test)
             if [[ -f bin/brainfuck_tests ]]; then
-                bin/brainfuck_tests "$@"
+                bin/brainfuck_tests
             else
                 echo -e "${RED}Can't find installed executable ./bin/brainfuck_tests${NC}"
                 exit 2
