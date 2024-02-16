@@ -39,7 +39,7 @@ brainfuck.setup() {
 
 brainfuck.clean() {
   hl.subtle "Cleaning output folders..."
-  run 'rm -rf bin/d* include/d* lib/*'
+  run 'rm -rf bin/b* include/b* lib/*'
 }
 
 brainfuck.build() {

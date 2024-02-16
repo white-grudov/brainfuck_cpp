@@ -1,7 +1,12 @@
 #include <iostream>
+#include <brainfuck.h>
 
 int main(int argc, const char *argv[]) 
 {
-    std::cout << "Hello, World!" << std::endl;
+    using namespace bf;
+
+    Brainfuck brainfuck;
+    std::cout << brainfuck.parse(",>++++++[<-------->-],[<+>-]<.") << '\n';
+
     return 0;
 }
