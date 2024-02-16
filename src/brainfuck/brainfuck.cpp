@@ -1,7 +1,6 @@
 #include "brainfuck.h"
 #include <algorithm>
 #include <iostream>
-#include <exception>
 
 namespace bf
 {
@@ -21,10 +20,7 @@ std::string Brainfuck::parse(std::string input)
 
     while (current_char < input.length())
     {
-        if (auto ch = process_char(input))
-        {
-            result += *ch;
-        }
+        if (auto ch = process_char(input)) result += *ch;
     }
 
     return result;
@@ -36,10 +32,10 @@ std::optional<char> Brainfuck::process_char(std::string& input)
     switch (ch)
     {
         case '>':
-            current_index = current_index == CELL_COUNT - 1 ? 0 : current_index + 1;
+            current_index = (current_index + 1) % CELL_COUNT;
             break;
         case '<':
-            current_index = current_index == 0 ? CELL_COUNT - 1 : current_index - 1;
+            current_index = (current_index - 1 + CELL_COUNT) % CELL_COUNT;
             break;
         case '+':
             ++cells[current_index];
@@ -78,7 +74,7 @@ std::optional<char> Brainfuck::process_char(std::string& input)
             }
             break;
         default:
-            throw std::runtime_error("Invalid character in input");
+            throw brainfuck_error{ch};
     }
     ++current_char;
     return std::nullopt;

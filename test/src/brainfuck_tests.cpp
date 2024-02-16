@@ -3,14 +3,27 @@
 
 class BrainfuckTest : public ::testing::Test 
 {
+private:
+    bf::Brainfuck brainfuck;
+
 protected:
-    virtual void verify() 
+    virtual void run(std::string program, std::string output) 
     {
-        EXPECT_TRUE(true);
+        EXPECT_EQ(brainfuck.parse(program), output);
     }
 };
 
-TEST_F(BrainfuckTest, InitialTest)
+TEST_F(BrainfuckTest, HelloWorld)
 {
-    verify();
+    std::string program = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<+"
+                          "+.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-"
+                          "]<+.";
+    std::string output = "Hello, World!";
+    run(program, output);
+}
+
+TEST_F(BrainfuckTest, InvalidChar)
+{
+    std::string program = ">+++a.";
+    EXPECT_THROW(run(program, ""), bf::brainfuck_error);    
 }
