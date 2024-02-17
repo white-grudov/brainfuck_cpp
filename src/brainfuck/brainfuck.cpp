@@ -85,25 +85,18 @@ std::optional<char> Brainfuck::process_char(std::string& input)
     return std::nullopt;
 }
 
-void Brainfuck::reset() noexcept
+void Brainfuck::process_input()
 {
-    std::fill(cells.begin(), cells.begin() + max_index, 0); // clear cells before the next program
-    current_index = 0;
-    current_char = 0;
-}
-
-void Brainfuck::process_input() noexcept
-{
-    if (args.input_from_cmd && args.input.empty())
+    if (args.input_from_args && args.input.empty())
     {
         throw empty_input_error{};
     }
 
-    if (!args.input_from_cmd && !args.number_mode)
+    if (!args.input_from_args && !args.number_mode)
     {
         std::cin >> cells[current_index];
     }
-    else if (args.input_from_cmd && !args.number_mode)
+    else if (args.input_from_args && !args.number_mode)
     {
         cells[current_index] = args.input[0];
         args.input = args.input.substr(1);
@@ -111,7 +104,7 @@ void Brainfuck::process_input() noexcept
     else
     {
         std::string num_str{};
-        if (args.input_from_cmd)
+        if (args.input_from_args)
         {
             if (auto pos = args.input.find(' '); pos != std::string::npos) 
             {
@@ -138,5 +131,13 @@ void Brainfuck::process_input() noexcept
         }
     }
 }
+
+void Brainfuck::reset() noexcept
+{
+    std::fill(cells.begin(), cells.begin() + max_index, 0); // clear cells before the next program
+    current_index = 0;
+    current_char = 0;
+}
+
 
 } // namespace bf

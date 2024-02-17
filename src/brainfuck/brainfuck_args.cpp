@@ -39,11 +39,11 @@ void BrainfuckArgs::parse(int argc, char** argv)
         }
         else if (arg == "-c" || arg == "--cmd-input")
         {
-            input_from_cmd = true;
+            input_from_args = true;
         }
         else 
         {
-            if (input_from_cmd) input += arg + " ";
+            if (input_from_args) input += arg + " ";
             std::runtime_error{"Unknown argument: " + arg};
         }
     }

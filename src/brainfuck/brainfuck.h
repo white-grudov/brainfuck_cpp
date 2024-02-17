@@ -32,8 +32,8 @@ public:
 
 private:
     std::optional<char> process_char(std::string& input);
+    void process_input();
     void reset() noexcept;
-    void process_input() noexcept;
 };
 
 } // namespace bf

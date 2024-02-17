@@ -1,31 +1,73 @@
 #include "gtest/gtest.h"
 #include <brainfuck.h>
 
-class BrainfuckTest : public ::testing::Test 
+TEST(BrainfuckTest, HelloWorld)
 {
-private:
-
-    bf::BrainfuckArgs args;
+    bf::BrainfuckArgs args{/*input_from_args*/false, /*number_mode*/false};
     bf::Brainfuck brainfuck{args};
 
-protected:
-    virtual void run(std::string program, std::string output) 
-    {
-        EXPECT_EQ(brainfuck.parse(program), output);
-    }
-};
-
-TEST_F(BrainfuckTest, HelloWorld)
-{
     std::string program = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<+"
                           "+.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-"
                           "]<+.";
     std::string output = "Hello, World!";
-    run(program, output);
+    
+    std::string result = brainfuck.parse(program);
+    EXPECT_EQ(result, output);
 }
 
-TEST_F(BrainfuckTest, InvalidChar)
+TEST(BrainfuckTest, NumAddition)
 {
+    int num1 = 52;
+    int num2 = 34;
+    std::string input = std::to_string(num1) + " " + std::to_string(num2);
+
+    bf::BrainfuckArgs args{/*input_from_args*/true, /*number_mode*/true};
+    args.input = input;
+    bf::Brainfuck brainfuck{args};
+
+    std::string program = ",>,[<+>-]<.";
+    std::string output = std::to_string(num1 + num2);
+    EXPECT_EQ(brainfuck.parse(program), output);    
+}
+
+TEST(BrainfuckTest, InvalidChar)
+{
+    bf::BrainfuckArgs args{/*input_from_args*/false, /*number_mode*/false};
+    bf::Brainfuck brainfuck{args};
+
     std::string program = ">+++a.";
-    EXPECT_THROW(run(program, ""), bf::brainfuck_error);    
+    EXPECT_THROW(brainfuck.parse(program), bf::invalid_character_error);    
+}
+
+TEST(BrainfuckTest, EmptyInput)
+{
+    bf::BrainfuckArgs args{/*input_from_args*/true, /*number_mode*/true};
+    bf::Brainfuck brainfuck{args};
+
+    std::string program = ",>,[<+>-]<.";
+    EXPECT_THROW(brainfuck.parse(program), bf::empty_input_error);    
+}
+
+TEST(BrainfuckTest, NumberOutOfRange)
+{
+    std::string input = "531";
+
+    bf::BrainfuckArgs args{/*input_from_args*/true, /*number_mode*/true};
+    args.input = input;
+    bf::Brainfuck brainfuck{args};
+
+    std::string program = ",>,[<+>-]<.";
+    EXPECT_THROW(brainfuck.parse(program), bf::parse_number_error);    
+}
+
+TEST(BrainfuckTest, NotANumber)
+{
+    std::string input = "abc";
+
+    bf::BrainfuckArgs args{/*input_from_args*/true, /*number_mode*/true};
+    args.input = input;
+    bf::Brainfuck brainfuck{args};
+
+    std::string program = ",>,[<+>-]<.";
+    EXPECT_THROW(brainfuck.parse(program), bf::parse_number_error);    
 }
